@@ -157,14 +157,10 @@
   <!--   Core JS Files   -->
   <?=CDN_JS_CORE_ALL?>
   <?=CDN_JS_FONTAWESOME_ALL?>
-  <script src="{{asset('assets/js/plugins/perfect-scrollbar.min.js')}}"></script>
-  <script src="{{asset('assets/js/plugins/smooth-scrollbar.min.js')}}"></script>
+  <?=CDN_JS_PERFECT_SCROLLBAR?>
   @yield('js')
-  <script src="{{asset('assets/js/argon-dashboard.min.js?v=2.0.5')}}" type="text/javascript"></script>
+  <?=CDN_JS_MAIN?>
   <script src="{{asset('assets/js/view/home.js')}}" type="text/javascript"></script>
-  @if (session('user.nivel') != 1)
-  <script src="{{asset('assets/js/utils/refresh_ajax.js')}}" type="text/javascript"></script>
-  @endif
   @yield('js2')
 </body>
 

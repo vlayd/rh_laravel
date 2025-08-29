@@ -34,7 +34,7 @@
         ],
         [
             'titulo' => 'GERENCIAR',
-            'menu' => 'Lista',
+            'menu' => 'Informações',
             'collapse' => [
                 'id' => 'listaGerenciarCollapse',
                 'show' => $showListaGerenciar??'',

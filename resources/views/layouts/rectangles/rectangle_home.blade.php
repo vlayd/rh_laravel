@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-6 col-12">
+<a href="#collapse{{$idCollapse}}" class="col-lg-3 col-md-6 col-12" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapse{{$idCollapse}}">
     <div class="card border-1 bg-{{$color}} shadow-lg">
         <div class="card-body p-3 position-relative shadow-lg">
             <div class="row">
@@ -17,4 +17,4 @@
             </div>
         </div>
     </div>
-</div>
+</a>

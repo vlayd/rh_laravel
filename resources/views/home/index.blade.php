@@ -1,3 +1,4 @@
+
 @extends('layouts.main_layout')
 
 @section('breadcrumb')
@@ -49,9 +50,10 @@
                     @include('layouts.rectangles.rectangle_home', [
                     'color' => $dado['color'],
                     'title' => $dado['title'],
-                    'valueAtual' => $dado['valueAnterior'],
+                    'valueAtual' => $dado['valueAtual'],
                     'valueAnterior' => $dado['valueAnterior'],
                     'valueProximo' => $dado['valueProximo'],
+                    'idCollapse' => $dado['idCollapse']??''
                 ])
                 @endforeach
                 
@@ -59,7 +61,9 @@
             <!-- Fim Botões -->
             <!-- ìnício tabela -->
             <div class="card mt-4 collapse" id="collapseAniversariantes">
-                
+                @foreach ($aniversarios as $aniversario)
+                    @include('home.tabelas.tabela_anversariantes', ['lista' => $aniversario['lista'], 'mes' => $aniversario['mes']])
+                @endforeach
             </div>
       <!-- Fim tabela -->
         </div>

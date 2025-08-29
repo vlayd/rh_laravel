@@ -72,9 +72,30 @@ define('CDN_JS_SWEETALERT2', '
 <script src="'.CDN_JS_INIT.'sweetalert2.js"></script>
 ');
 
-define('CDN_JS_MAIN', '<script src="'.CDN_CSS.'argon-dashboard.min.js?v=2.0.5"></script>');
+define('CDN_JS_PERFECT_SCROLLBAR', '
+<script src="'.CDN_JS_PLUGINS.'perfect-scrollbar.min.js"></script>
+<script src="'.CDN_JS_PLUGINS.'smooth-scrollbar.min.js"></script>
+<script src="'.CDN_JS_INIT.'perfect-scrollbar.js"></script>
+');
+
+define('CDN_JS_MAIN', '<script src="'.CDN_JS.'argon-dashboard.min.js?v=2.0.5"></script>');
 
 //________________________ARRAYS UTEIS________________________________
+define('MES', [
+    '01' => 'janeiro',
+    '02' => 'fevereiro',
+    '03' => 'março',
+    '04' => 'abril',
+    '05' => 'maio',
+    '06' => 'junho',
+    '07' => 'junho',
+    '08' => 'agosto',
+    '09' => 'setembro',
+    '10' => 'outubro',
+    '11' => 'novembro',
+    '12' => 'dezembro',
+]);
+
 define('MES_', [
     '0' => 'dezembro',
     '1' => 'janeiro',

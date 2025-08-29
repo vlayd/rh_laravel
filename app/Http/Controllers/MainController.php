@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
+use App\Services\Operations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,16 +19,17 @@ class MainController extends Controller
                 [
                     'color' => 'dark',
                     'title' => 'Humanização',
-                    'valueAtual' => '20',
-                    'valueAnterior' => '20',
-                    'valueProximo' => '20',
+                    'valueAtual' => '21',
+                    'valueAnterior' => '22',
+                    'valueProximo' => '23',
                 ],
                 [
                     'color' => 'primary',
                     'title' => 'Aniversariantes',
-                    'valueAtual' => '20',
-                    'valueAnterior' => '20',
-                    'valueProximo' => '20',
+                    'valueAtual' => $this->retornaAniversariantes( date('m'), 'count'),
+                    'valueAnterior' => $this->retornaAniversariantes( date('m') - 1, 'count'),
+                    'valueProximo' => $this->retornaAniversariantes( date('m') + 1, 'count'),
+                    'idCollapse' => 'Aniversariantes'
                 ],
                 [
                     'color' => 'warning',
@@ -44,20 +46,14 @@ class MainController extends Controller
                     'valueProximo' => '20',
                 ],
             ],
-            'mesAtual' => [
-                'total' => $this->retornaAniversariantes( date('m'), 'count'),
-                'lista' => $this->retornaAniversariantes( date('m')),
-            ],
-            'mesSeguinte' => [
-                'total' => $this->retornaAniversariantes( date('m') + 1, 'count'),
-                'lista' => $this->retornaAniversariantes( date('m')),
-            ],
-            'mesAnterior' => [
-                'total' => $this->retornaAniversariantes( date('m') - 1, 'count'),
-                'lista' => $this->retornaAniversariantes( date('m')),
-            ],
-        ];
+            'aniversarios' => [
+                [
+                    'mes' => MES_[date('n')],
+                    'lista' => $this->retornaAniversariantes(date('m')),
 
+                ]
+            ]
+        ];
         return view('home/index', $dados);
     }
 
