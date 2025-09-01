@@ -5,9 +5,9 @@
                 <div class="col">
                     <div class="numbers text-center">
                         <p class="fs-1 mb-0 font-weight-bold text-white">
-                            <span class="mes_atual retangulo_home">{{$valueAtual}}</span>
-                            <span class="mes_anterior d-none retangulo_home">{{$valueAnterior}}</span>
-                            <span class="mes_proximo d-none retangulo_home">{{$valueProximo}}</span>
+                            <span class="mes mes{{MES[MES_ATUAL]}} retangulo_home">{{$valueAtual}}</span>
+                            <span class="mes mes{{MES[MES_ANTERIOR]}} d-none retangulo_home">{{$valueAnterior}}</span>
+                            <span class="mes mes{{MES[MES_PROXIMO]}} d-none retangulo_home">{{$valueProximo}}</span>
                         </p>
                         <div class="font-weight-bolder mb-0 h5 text-white">
                             {{$title}}

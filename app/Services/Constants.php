@@ -17,7 +17,7 @@ define('CDN_FONTAWESOME', URL_BASE.'cdn/assets/fontawesome/');
 
 define('RH_USUARIOS', URL_BASE.'rh/public/assets/upload/usuarios/');
 
-define('PATH_UPLOAD_FOTO_PERFIL', 'assets/upload/usuarios/files/perfil/');
+define('PATH_UPLOAD_FOTO_PERFIL', 'assets/upload/usuarios/');
 define('PATH_APOIO_PROCON', 'assets/img/apoio/logo.png');
 define('PATH_APOIO_LOGOS', 'assets/img/apoio/logo_all.jpeg');
 define('PATH_APOIO_GOVERNO', 'assets/img/apoio/imggov.png');
@@ -112,6 +112,10 @@ define('MES_', [
     '12' => 'dezembro',
     '13' => 'janeiro',
 ]);
+
+define('MES_ATUAL', date('m'));
+define('MES_ANTERIOR', date('m', strtotime('-1 month')));
+define('MES_PROXIMO', date('m', strtotime('+1 month')));
 
 define('ESCOLARIDADE', [
     'Não informado',

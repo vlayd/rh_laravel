@@ -26,17 +26,17 @@
             <div class="nav-wrapper position-relative ms-auto w-50">
                 <ul class="nav nav-pills nav-fill p-1" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="javascript:;" role="tab" id="tabMesAtual" aria-selected="true">
+                        <a class="nav-link mb-0 px-0 py-1 tabMes active" data-bs-toggle="tab" href="javascript:;" role="tab" id="tabMesAtual" aria-selected="true" data-mes="{{MES[MES_ATUAL]}}">
                             Mês atual
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="javascript:;" role="tab" id="tabMesSeguinte" aria-selected="false">
+                        <a class="nav-link mb-0 px-0 py-1 tabMes" data-bs-toggle="tab" href="javascript:;" role="tab" id="tabMesSeguinte" aria-selected="false" data-mes="{{MES[MES_PROXIMO]}}">
                             Mês seguinte
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="javascript:;" role="tab" id="tabMesAnterior" aria-selected="false">
+                        <a class="nav-link mb-0 px-0 py-1 tabMes" data-bs-toggle="tab" href="javascript:;" role="tab" id="tabMesAnterior" aria-selected="false" data-mes="{{MES[MES_ANTERIOR]}}">
                             Mês anterior
                         </a>
                     </li>
@@ -62,7 +62,7 @@
             <!-- ìnício tabela -->
             <div class="card mt-4 collapse" id="collapseAniversariantes">
                 @foreach ($aniversarios as $aniversario)
-                    @include('home.tabelas.tabela_anversariantes', ['lista' => $aniversario['lista'], 'mes' => $aniversario['mes']])
+                    @include('home.tabelas.tabela_anversariantes', ['lista' => $aniversario['lista'], 'mes' => $aniversario['mes'], 'classe' => $aniversario['classe']])
                 @endforeach
             </div>
       <!-- Fim tabela -->

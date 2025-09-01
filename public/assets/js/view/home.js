@@ -1,15 +1,10 @@
-$('#tabMesAtual').on('click', function () {
-    showMes('pMesAtual', 'listaMesAtual', 'pMesSeguinte','listaMesSeguinte', 'pMesAnterior', 'listaMesAnterior');
-});
-$('#tabMesSeguinte').on('click', function () {
-    showMes('pMesSeguinte', 'listaMesSeguinte', 'pMesAtual','listaMesAtual', 'pMesAnterior', 'listaMesAnterior');
-});
-$('#tabMesAnterior').on('click', function () {
-    showMes('pMesAnterior', 'listaMesAnterior', 'pMesAtual','listaMesSeguinte', 'pMesSeguinte', 'listaMesAtual');
+$('.tabMes').on('click', function () {
+    showMes($(this).data('mes'));
 });
 
 function showMes(mes) {
-    $('.aniversarios').addClass("d-none");
+    console.log(mes);    
+    $('.mes').addClass("d-none");
     $('.mes'+mes).removeClass("d-none");
     return;
 }
