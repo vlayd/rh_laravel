@@ -160,7 +160,9 @@
   <?=CDN_JS_PERFECT_SCROLLBAR?>
   @yield('js')
   <?=CDN_JS_MAIN?>
-  <script src="{{asset('assets/js/view/home.js')}}" type="text/javascript"></script>
+  @if (isset($js))
+  <script src="{{asset('assets/js/view/'.$js.'.js')}}" type="text/javascript"></script>
+  @endif
   @yield('js2')
 </body>
 

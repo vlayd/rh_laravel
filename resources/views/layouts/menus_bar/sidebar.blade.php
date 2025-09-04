@@ -13,7 +13,7 @@
             'titulo' => 'USUÁRIOS',
             'menu' => 'Servidores',
             'route' => 'servidor',
-            'activeMenu' => $page1 == 'home' ? 'active' : '',
+            'activeMenu' => $page1 == 'servidor' ? 'active' : '',
             'icon' => 'fa-solid fa-users text-primary',
         ],
         [

@@ -1,4 +1,8 @@
 
+@php
+    $page = ['home'];
+    $js = 'home';
+@endphp
 @extends('layouts.main_layout')
 
 @section('breadcrumb')
