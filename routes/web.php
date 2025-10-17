@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AnexoController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HistoricoController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ServidorController;
 use App\Http\Middleware\CheckIsLogged;
@@ -26,8 +28,18 @@ Route::middleware([CheckIsLogged::class])->group(function(){
         Route::post('pesquisacpf', [ServidorController::class, 'pesquisaCpf'])->name('servidor.pesquisacpf');
         Route::post('salvacpf', [ServidorController::class, 'salvaCpf'])->name('servidor.salvacpf');
         Route::post('updatestatus', [ServidorController::class, 'updateStatus'])->name('servidor.updatestatus');
-        Route::get('edit/{id}', [ServidorController::class, 'edit'])->name('servidor.edit');
         Route::post('update', [ServidorController::class, 'update'])->name('servidor.update');
         Route::post('addcol', [ServidorController::class, 'formSaveCol'])->name('servidor.addcol');
+        Route::get('timeline/{id}', [ServidorController::class, 'timeline'])->name('servidor.timeline');;
+    });
+    Route::prefix('historico')->group(function(){
+        Route::get('detail/{id}', [HistoricoController::class, 'detail'])->name('historico.detail');
+        Route::post('save', [HistoricoController::class, 'save'])->name('historico.save');
+    });
+    Route::prefix('anexo')->group(function(){
+        Route::get('/{id}', [AnexoController::class, 'index'])->name('anexo');
+        Route::get('listar', [AnexoController::class, 'listar'])->name('anexo.listar');
+        Route::post('salvar', [AnexoController::class, 'salvar'])->name('anexo.salvar');
+        Route::post('deletar', [AnexoController::class, 'deletar'])->name('anexo.deletar');
     });
 });

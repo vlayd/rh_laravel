@@ -12,7 +12,7 @@
                 <td>
                     <div class="d-flex px-2 py-1">
                         <div>
-                            <img src="<?=asset(PATH_UPLOAD_FOTO_PERFIL.$aniversariante->id.'/perfil/'.$aniversariante->foto)?>" class="avatar rounded-circle me-2">
+                            <img src="<?=asset(PATH_UPLOAD_USUARIO.$aniversariante->id.'/perfil/'.$aniversariante->foto)?>" class="avatar rounded-circle me-2">
                         </div>
                         <div class="my-auto">
                             <h6 class="mb-0 text-xs"><?=$aniversariante->nome?></h6>

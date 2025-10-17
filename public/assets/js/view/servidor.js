@@ -1,12 +1,12 @@
 // ========VARIÁVEIS BASE=============
 var url = window.location.href;
 var baseUrl = $('#base_url').html();
-var listaAnexos = null;
+var selectAnexos = null;
 var listaAnexosInterino = null;
 
-if (document.getElementById('choices-tags-anexos-historico')) {
-    var tagsH = document.getElementById('choices-tags-anexos-historico');
-    listaAnexos = new Choices(tagsH, {
+if (document.getElementById('choices-tags-h')) {
+    var tagsH = document.getElementById('choices-tags-h');
+    selectAnexos = new Choices(tagsH, {
       removeItemButton: true,
       searchEnabled: true,
       searchChoices: true,
@@ -15,23 +15,29 @@ if (document.getElementById('choices-tags-anexos-historico')) {
     });
 }
 
-if (document.getElementById('choices-tags-anexos-interino')) {
-    var tagsI = document.getElementById('choices-tags-anexos-interino');
-    listaAnexosInterino = new Choices(tagsI, {
-      removeItemButton: true,
-      searchEnabled: true,
-      searchChoices: true,
-      searchFields: ['label'],
-      duplicateItemsAllowed: false,
-    });
-}
+// if (document.getElementById('choices-tags-anexos-interino')) {
+//     var tagsI = document.getElementById('choices-tags-anexos-interino');
+//     listaAnexosInterino = new Choices(tagsI, {
+//       removeItemButton: true,
+//       searchEnabled: true,
+//       searchChoices: true,
+//       searchFields: ['label'],
+//       duplicateItemsAllowed: false,
+//     });
+// }
 
 // ========INICIALIZAÇÃO=============
 $(document).ready(function() {
-    if(document.getElementById('escolaridade')) validaEscolaridade();
-    if(document.getElementById('contrato')) validaContrato();
     if(document.getElementById('tabela_servidor')) listar();
 });
+
+$.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+$('body').on("change", '#escolaridade', function () { validaEscolaridade(); });
 
 // ========FUNÇÕES ÚTEIS=============
 function listarAnexos() {
@@ -72,18 +78,6 @@ if(document.getElementById('tabMesAtual')){
     });
     $('#tabMesAnterior').on('click', function () {
         show1('pMesAnterior', 'listaMesAnterior', 'pMesAtual','listaMesSeguinte', 'pMesSeguinte', 'listaMesAtual');
-    });
-}
-
-if(document.getElementById('contrato')){
-    $("#contrato").on("change", function(a) {
-        validaContrato();
-    }
-)};
-
-if(document.getElementById('escolaridade')){
-    $("#escolaridade").on("change", function(a) {
-        validaEscolaridade();
     });
 }
 
@@ -207,14 +201,13 @@ function pesquisaCPF(cpf) {
         data: {cpf: cpf},
         success: function (result) {
             console.log(result);
-            if(result == '1') return actionBtnSaveCpf(false, 'CPF já cadastrado!');
+            if(result > 0) return actionBtnSaveCpf(false, 'CPF já cadastrado!');
             else return actionBtnSaveCpf(true, '');
         }
     });
 }
 
 function alteraStatus(idUser, idStatus, nomeUser){
-    console.log(idStatus);
     $('#tipo').html('updatestatus');
     $('input[name="id_user"]').val(idUser);
     $('input[name="value_info"]').val(idStatus);
@@ -309,34 +302,29 @@ function editItem(idItem, item) {
 
 function editHistorico(id) {
     //Evita duplicidade
-    listaAnexos.clearStore();
+    selectAnexos.clearStore();
     const obj = JSON.parse($('#dados'+id).html());
     const anexos = JSON.parse($('#jsonAnexo'+id).html());
-    $('#selectContratoModal').val(obj.contrato).change();
-    $('#selectCargoModal').val(obj.cargo).change();
-    $('#selectGratificacaoModal').val(obj.gratificacao).change();
-    $('#selectSetorModal').val(obj.setor).change();
-    $('#selectChefiaModal').val(obj.chefia).change();
-    $('#inputMatriculaModal').val(obj.matricula);
-    $('#inputFuncaoModal').val(obj.funcao);
-    $('#dataContratacao').val(obj.data_contratacao);
-    $('#dataEncerramento').val(obj.data_rescisao);
-    $('input[name="idHistoricoModal"]').val(id);
-    if(id != 0){
-        $.each(['1','2','3','4','5','6','7','8'], function(index, value) {
-            if($.inArray(value, JSON.parse(obj.tipo)) >= 0) $('input[type="checkbox"][value='+value+']').attr("checked", true);
-            else $('input[type="checkbox"][value='+value+']').attr("checked", false);
-        });
-        if(obj.status == 1) $('#situacaoAtual').attr("checked", true);
-        else $('#situacaoAtual').attr("checked", false);
-    } else {
-        $.each([1,2,3,5,6,7,8], function(index, value) {
-            $('input[type="checkbox"][value='+value+']').attr("checked", false);
-        });
-    }
+    
+    $('#contrato').val(obj.contrato).change();
+    $('#cargo').val(obj.cargo).change();
+    $('#matricula').val(obj.matricula);
+    $('#funcao').val(obj.funcao);
+    $('#gratificacao').val(obj.gratificacao).change();
+    $('#setor').val(obj.setor).change();
+    $('#chefia').val(obj.chefia).change();
+    $('#data_contratacao').val(obj.data_contratacao);
+    $('#data_rescisao').val(obj.data_rescisao);
+    $('input[name="id_historico"]').val(id);
+    
+    $.each(['1','2','3','4','5','6','7','8'], function(index, value) {
+        if($.inArray(value, JSON.parse(obj.alteracao)) >= 0) $('input[type="checkbox"][value='+value+']').attr("checked", true);
+        else $('input[type="checkbox"][value='+value+']').attr("checked", false);
+    });
+    if(obj.status == 1) $('#situacaoAtual').attr("checked", true);
+    else $('#situacaoAtual').attr("checked", false);
+    selectAnexos.setChoices(anexos);
 
-
-    listaAnexos.setChoices(anexos);
 }
 
 function showAniversario(mes) {
@@ -360,6 +348,9 @@ function showAniversario(mes) {
         $('.mes').addClass('d-none');
         $('.mes'+mes).removeClass('d-none');
     }
+}
+
+function getAnexos(){
 
 }
 
@@ -379,7 +370,7 @@ function editInterino(idInterino, idUser, idHistorico) {
     $('input[name="idUser"]').val(idUser);
     $('input[name="idHistorico"]').val(idHistorico);
 
-    listaAnexosInterino.setChoices(anexos);
+    // listaAnexosInterino.setChoices(anexos);
 }
 
 function editItemAnexo(idItem, item) {

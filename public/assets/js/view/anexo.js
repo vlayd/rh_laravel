@@ -1,21 +1,15 @@
+var baseUrl = $('#base_url').html();
+var urlAnexo = baseUrl+'anexo/';
+
 // ========INICIALIZAÇÃO=============
 $(document).ready(function() {
-    listar();
+   
 });
 
-// ========FUNÇÕES ÚTEIS=============
-function listar() {
-    urlLista = url.replace('anexo', 'anexo/listar');
-    $.ajax({
-        url: urlLista,
-        method: 'GET',
-        dataType: 'html',
-        success: function (result) {
-            $('#tabela_anexo').html(result);
-        }
-    });
-}
+$('body').on("click", '.btn_prepare_save', function () { prepereSalvar($(this).data('id')); });
+$('body').on("click", '.btn_prepare_delete', function () { prepereDeletar($(this).data('id')); });
 
+// ========FUNÇÕES ÚTEIS=============
 function selectAnexo(item) {
     if(item == 'perfil'){
         $('.item1').removeClass('d-none');
@@ -76,41 +70,38 @@ function selectAnexo(item) {
 }
 
 function resetInputs() {
-    $('input[class="form-control"]').val('');
-    $('select[class="form-control"]').val('0').change();
-    $('input[name="idModal"]').val('');
-    $('input[type="file"]').val('');
-    $('input[type="text"]').val('');
-    $('input[type="number"]').val('0');
+    $('[name="nome"]').val('');
+    $('[name="ordem"]').val('0');
+    $('[name="tipo"]').val('0').change();
+    $('[name="anexo"]').val('');
+    $('[name="id_anexo"]').val('');
 }
 
-function preparaEdit(id) {
-    resetInputs();
-    $('#nomeModal').val($('#nome'+id).html());
-    $('#ordemModal').val($('#ordem'+id).html());
-    $('#tipoModal').val($('#tipo'+id).html()).change();
-    $('input[name="idModal"]').val(id);
+function prepereSalvar(id) {
+    if (id == '0') return resetInputs();
+    $('[name="nome"]').val($('#nome'+id).html());
+    $('[name="ordem"]').val($('#ordem'+id).html());
+    $('[name="tipo"]').val($('#tipo'+id).html()).change();
+    $('[name="id_anexo"]').val(id);
+    $('[name="anexo"]').val('');
 }
 
-$('#form-save').on('submit', function (e) {
-    e.preventDefault();
-    urlSave = url.replace('anexo', 'anexo/save');
+function prepereDeletar(id) {
+    $('#deletar_nome').html($('#nome' + id).html());
+    $('[name="id"]').val(id);
+}
+
+function deletar(id) {
     $.ajax({
-        url: urlSave,
+        url: urlAnexo + 'deletar',
         method: 'POST',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData: false,
+        data: {id: id},
         success: function (result) {
-            resetInputs();
-            toast(result);
-            if(result == 'success'){
-                listar();
-            }
+            if(result == 'success') listar();
+            else toast('error', 'Erro ao deletar usuário!');
         },
         error: function (result) {
-            console.log('Erros ' + result);            
+            toast('error', 'Erro desconhecido!');
         }
     });
-});
+}

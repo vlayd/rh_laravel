@@ -6,7 +6,7 @@ define('NAME_APP', 'Sistema RH');
 //________________________PATH_______________________________________
 define('CDN', URL_BASE.'cdn/');
 define('CDN_CSS', URL_BASE.'cdn/assets/css/');
-define('CDN_IMG_APOIO', URL_BASE.'cdn/assets/css/img/apoio/');
+define('CDN_IMG_APOIO', URL_BASE.'cdn/assets/img/apoio/');
 
 define('CDN_JS', URL_BASE.'cdn/assets/js/');
 define('CDN_ASSETS', URL_BASE.'cdn/assets/');
@@ -17,13 +17,14 @@ define('CDN_FONTAWESOME', URL_BASE.'cdn/assets/fontawesome/');
 
 define('RH_USUARIOS', URL_BASE.'rh/public/assets/upload/usuarios/');
 
-define('PATH_UPLOAD_FOTO_PERFIL', 'assets/upload/usuarios/');
+define('PATH_UPLOAD_USUARIO', 'assets/upload/usuarios/');
+define('PATH_UPLOAD_ANEXO', 'assets/upload/usuarios/');
 define('PATH_APOIO_PROCON', 'assets/img/apoio/logo.png');
 define('PATH_APOIO_LOGOS', 'assets/img/apoio/logo_all.jpeg');
 define('PATH_APOIO_GOVERNO', 'assets/img/apoio/imggov.png');
 define('PATH_APOIO_TEST_USER', 'assets/img/apoio/test_user.jpg');
 define('PATH_APOIO_TEST_USER_2', 'assets/img/apoio/test_user2.png');
-define('PATH_NO_IMAGE', 'assets/upload/usuarios/files/no-image.jpg');
+define('PATH_SEM_IMAGEM', CDN_IMG_APOIO.'no-image.jpg');
 define('PATH_SEM_FOTO', CDN_IMG_APOIO.'no-foto.png');
 define('PATH_UPLOAD_FILE_ANEXO', 'assets/upload/usuarios/files/anexo/');
 
@@ -45,12 +46,16 @@ define('CDN_JS_CORE_ALL', '
 <script src="'.CDN_JS_CORE.'jquery-3.6.0.min.js"></script>
 <script src="'.CDN_JS_CORE.'popper.min.js"></script>
 <script src="'.CDN_JS_CORE.'bootstrap.min.js"></script>
+<script src="'.CDN_JS.'pages.js"></script>
 ');
 
 define('CDN_JS_FONTAWESOME_ALL', '
 <script src="'.CDN_FONTAWESOME.'js/all.min.js"></script>
 <script src="'.CDN_FONTAWESOME.'fontawesome/js/all.min.js"></script>
 ');
+
+define('CDN_JS_MULTISTEP_FORM', '<script src="'.CDN_JS_PLUGINS.'multistep-form.js"></script>');
+define('CDN_JS_PAGES', '<script src="'.CDN_JS.'pages.js"></script>');
 
 define('CDN_JS_DATATABLES', '
 <script src="'.CDN_JS_PLUGINS.'datatables.js"></script>
@@ -60,6 +65,11 @@ define('CDN_JS_DATATABLES', '
 define('CDN_JS_MASK', '
 <script src="'.CDN_JS_PLUGINS.'jquery.mask.min.js"></script>
 <script src="'.CDN_JS_INIT.'jquery.mask.js"></script>
+');
+
+define('JS_PLUGIN_CHOICES', '
+    <script src="'.CDN_JS_PLUGINS.'choices.min.js" type="text/javascript"></script>
+    <script src="'.CDN_JS_INIT.'choices.js" type="text/javascript"></script>
 ');
 
 define('CDN_JS_TOAST', '
@@ -113,6 +123,12 @@ define('MES_', [
     '13' => 'janeiro',
 ]);
 
+define('TIPOS_ANEXO_BASIC', [
+    'profissional' => 'Profissional',
+    'folha' => 'Folhas de Ponto',
+    'funcao' => 'Referente a Função',
+]);
+
 define('MES_ATUAL', date('m'));
 define('MES_ANTERIOR', date('m', strtotime('-1 month')));
 define('MES_PROXIMO', date('m', strtotime('+1 month')));
@@ -132,14 +148,21 @@ define('ESCOLARIDADE', [
     'Doutorado Completo',
 ]);
 
+define('ALTERACAO_HISTORICO', [
+    1 => 'INÍCIO',
+    2 => 'CONTRATO',
+    3 => 'CARGO',
+    4 => 'MATRÍCULA',
+    5 => 'FUNÇÃO',
+    6 => 'GRATIFICAÇÃO',
+    7 => 'SETOR',
+    8 => 'CHEFIA'
+]);
+
 define('TIPOS_ANEXO', [
-    0 => 'Não Informado',
-    1 => 'Fotos Perfil',
-    2 => 'Fotos Aniversário',
-    3 => 'Fotos Comemorativa',
-    4 => 'Folha de Ponto',
-    5 => 'Faculdade',
-    6 => 'Especialização',
+    1 => 'Folha de Ponto',
+    2 => 'Faculdade',
+    3 => 'Especialização',
     7 => 'Mestrado',
     8 => 'Doutorado',
     9 => 'Outros Cursos',
@@ -198,11 +221,32 @@ define('SELECT_LISTA_USUARIO_INDEX', [
     'contratos.nome AS nomeContrato'
 ]);
 
-define('JOIN_U_CA', ['cargos', 'usuarios.cargo', 'cargos.id']);
-define('JOIN_U_CO', ['contratos', 'usuarios.contrato', 'contratos.id']);
-define('JOIN_U_E', ['escolaridades', 'usuarios.escolaridade', 'escolaridades.id']);
-define('JOIN_U_G', ['gratificacoes', 'usuarios.gratificacao', 'gratificacoes.id']);
-define('JOIN_U_S', ['setores', 'usuarios.setor', 'setores.id']);
+define('SELECT_TIME_LINE', [
+    'historicos.id AS idhistorico',
+    'historicos.id_usuario AS userHistorico',
+    'historicos.contrato',
+    'historicos.matricula',
+    'historicos.funcao',
+    'historicos.gratificacao',
+    'historicos.chefia',
+    'historicos.data_contratacao',
+    'historicos.setor',
+    'historicos.anexos',
+    'data_rescisao',
+    'historicos.alteracao',
+    'historicos.cargo',
+    'historicos.atual',
+    'contratos.nome AS nomeContrato',
+    'cargos.nome AS nomeCargo',
+    'setores.nome AS nomeSetor',
+    'gratificacoes.nome AS nomeGratificacao',
+    'anexos.nome AS nomeAnexo',
+    'anexos.id_usuario AS userAnexo'
+]);
+define('SELECT_CONTRATOS', ['contratos.nome AS nomeContrato']);
+define('SELECT_CARGOS', '[cargos.nome AS nomeCargo]');
+define('SELECT_GRATIFICACOES', ['gratificacoes.nome AS nomeGratificacao']);
+define('SELECT_ANEXOS', ['anexos.nome AS nomeAnexo', 'anexos.id_usuario AS userAnexo']);
 
 define('SELECT_USUARIO_SETOR', [
     'usuarios.id AS idUser', 'usuarios.nome AS nomeUser', 'sexo', 'cpf', 'senha', 'foto', 'telefone', 'telefone2', 'email', 'email2',
@@ -247,12 +291,12 @@ define(
         'gratificacoes.nome AS nomeGratificacao',
         'cargos.nome AS nomeCargo',
         'setores.nome AS nomeSetor',
-    ]
-);
-
-define(
-    'SELECT_SERVIDOR_HISTORICOS',
-    [
+        ]
+    );
+    
+    define(
+        'SELECT_SERVIDOR_HISTORICOS',
+        [
         'historicos.id AS idHistorico',
         'historicos.id_usuario AS userHistorico',
         'historicos.matricula',
@@ -273,12 +317,13 @@ define(
         'setores.nome AS nomeSetor',
         // 'anexos.nome AS nomeAnexo',
         // 'anexos.anexo AS anexo',
-    ]
-);
-
-define('SELECT_FUNCAO_INTERINA',
-    [
+        ]
+    );
+    
+    define('SELECT_FUNCAO_INTERINA',
+        [
         'funcao_interina.id',
+        'funcao_interina.id_historico',
         'funcao_interina.anexos',
         'funcao_interina.funcao',
         'funcao_interina.chefia',
@@ -287,5 +332,24 @@ define('SELECT_FUNCAO_INTERINA',
         'funcao_interina.observacao',
         'funcao_interina.setor',
         'setores.nome AS nomeSetor'
-    ]
-);
+        ]
+    );
+    
+    // ________________JOIN____________________
+    define('JOIN_USUARIO_SETOR', ['setores', 'usuarios.setor', 'setores.id']);
+    define('JOIN_USUARIO_ESCOLARIDADE', 'usuarios.escolaridade = escolaridades.id');
+    define('JOIN_USUARIO_HISTORICO', 'historicos.id_usuario = usuarios.id');
+    define('JOIN_USUARIO_GRATIFICACAO', 'usuarios.gratificacao = gratificacoes.id');
+    define('JOIN_USUARIO_CARGO', 'usuarios.cargo = cargos.id');
+    define('JOIN_USUARIO_CONTRATO', 'usuarios.contrato = contratos.id');
+    define('JOIN_USUARIO_PONTO', 'usuarios.id = folha_ponto.id_user');
+    define('JOIN_USUARIO_FERIAS', 'usuarios.id = ferias.id_servidor');
+
+    define('JOIN_HISTORICO_USUARIO', ['usuarios', 'historicos.id_usuario', 'usuarios.id']);
+    define('JOIN_HISTORICO_CONTRATO', ['contratos', 'historicos.contrato', 'contratos.id']);
+    define('JOIN_HISTORICO_CARGO', ['cargos', 'historicos.cargo', 'cargos.id']);
+    define('JOIN_HISTORICO_GRATIFICACAO', ['gratificacoes', 'historicos.gratificacao', 'gratificacoes.id']);
+    define('JOIN_HISTORICO_SETOR', ['setores', 'historicos.setor', 'setores.id']);
+    define('JOIN_HISTORICO_ANEXO', ['anexos', 'historicos.anexos', 'anexos.id']);
+
+    define('JOIN_FUNCAOINTERINA_SETOR', ['setores', 'funcao_interina.setor', 'setores.id']);

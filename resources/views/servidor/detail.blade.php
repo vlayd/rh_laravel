@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Controller;
+
+$foto = empty($servidor->foto) ? PATH_SEM_FOTO : PATH_UPLOAD_USUARIO.$servidor->idUsuario.'/perfil/'.$servidor->foto;
 ?>
 @extends('layouts.main_layout')
 
@@ -8,8 +10,8 @@ use App\Http\Controllers\Controller;
 @endsection
 
 @section('content')
-<div class="row mx-n4 mx-sm-n1">
-    <div class="col-sm-10 mx-auto">
+<div class="row">
+    <div class="col-12">
         <div class="card my-sm-5 my-lg-0">
             <div class="card-header text-center">
                 <div class="row">
@@ -21,7 +23,7 @@ use App\Http\Controllers\Controller;
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-12 text-center">
-                        <img class="mb-2 w-70 w-sm-50 w-md-35 w-lg-25 w-xxl-20 p-2" src="{{asset(PATH_APOIO_TEST_USER)}}" alt="Logo">
+                        <img class="mb-2 w-70 w-sm-50 w-md-35 w-lg-25 w-xxl-20 p-2" src="{{asset($foto)}}" alt="Logo">
                     </div>
                 </div>
                 <div class="row mx-n4 mx-sm-n2 mx-md-3">

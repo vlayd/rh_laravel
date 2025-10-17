@@ -1,3 +1,6 @@
+<?php
+header('Access-Control-Allow-Origin: *');
+?>
 <!DOCTYPE html>
 <html lang="pt_BR">
 <head>
@@ -48,7 +51,7 @@
               <div class="nav-link text-white font-weight-bold px-0 text-center">
                 <div class="row">
                   <div class="col-auto p-0">
-                    <img src="{{RH_USUARIOS.session('user.id').'/perfil/'.session('user.foto')}}" class="avatar avatar-sm rounded-circle me-2">
+                    <img src="{{RH_USUARIOS.session('user.id').'/perfil/'.CURRENT_USER->foto}}" class="avatar avatar-sm rounded-circle me-2">
                   </div>
                   <div class="col">
                     <span class="d-sm-inline d-none">{{session('user.nome')}}</span>

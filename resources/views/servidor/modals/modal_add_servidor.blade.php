@@ -1,5 +1,5 @@
 <div class="modal fade" id="addServidor" tabindex="-1" role="dialog" aria-labelledby="addServidorLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="addServidorLabel">Cadastrar CPF</h5>

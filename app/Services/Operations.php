@@ -29,9 +29,7 @@ class Operations
         $now = date_create(date("Y-m-d"));
         $diff = date_diff($date1, $now);
         return "{$diff->y} anos";
-    }
-
-    
+    }    
 
     public static function diffDaysNow($date1)
     {
