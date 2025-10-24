@@ -2,7 +2,7 @@
 var url = window.location.href;
 var baseUrl = $('#base_url').html();
 var selectAnexos = null;
-var listaAnexosInterino = null;
+var selectAnexosInterino = null;
 
 if (document.getElementById('choices-tags-h')) {
     var tagsH = document.getElementById('choices-tags-h');
@@ -15,16 +15,16 @@ if (document.getElementById('choices-tags-h')) {
     });
 }
 
-// if (document.getElementById('choices-tags-anexos-interino')) {
-//     var tagsI = document.getElementById('choices-tags-anexos-interino');
-//     listaAnexosInterino = new Choices(tagsI, {
-//       removeItemButton: true,
-//       searchEnabled: true,
-//       searchChoices: true,
-//       searchFields: ['label'],
-//       duplicateItemsAllowed: false,
-//     });
-// }
+if (document.getElementById('choices-tags-i')) {
+    var tagsI = document.getElementById('choices-tags-i');
+    selectAnexosInterino = new Choices(tagsI, {
+      removeItemButton: true,
+      searchEnabled: true,
+      searchChoices: true,
+      searchFields: ['label'],
+      duplicateItemsAllowed: false,
+    });
+}
 
 // ========INICIALIZAÇÃO=============
 $(document).ready(function() {
@@ -38,6 +38,9 @@ $.ajaxSetup({
 });
 
 $('body').on("change", '#escolaridade', function () { validaEscolaridade(); });
+$('body').on("click", '.prepare_delete_historico', function () { prepareDeleteHistorico($(this).data('id')); });
+$('body').on("click", '.prepare_save_interino', function () { editInterino($(this).data('id'), $(this).data('hist')); });
+$('body').on("click", '.prepare_delete_interino', function () { prepareDeleteInterino($(this).data('id')); });
 
 // ========FUNÇÕES ÚTEIS=============
 function listarAnexos() {
@@ -303,6 +306,8 @@ function editItem(idItem, item) {
 function editHistorico(id) {
     //Evita duplicidade
     selectAnexos.clearStore();
+    console.log($('#jsonAnexo'+id).html());
+    
     const obj = JSON.parse($('#dados'+id).html());
     const anexos = JSON.parse($('#jsonAnexo'+id).html());
     
@@ -351,26 +356,27 @@ function showAniversario(mes) {
 }
 
 function getAnexos(){
-
 }
 
-function editInterino(idInterino, idUser, idHistorico) {
+function editInterino(idI, idH) {  
+    $('[name="id_historico_interino"]').val(idH);
     //Evita duplicidade
-    // listaAnexosInterino.clearStore();
-    const obj = JSON.parse($('#dadosInterino'+idInterino).html());
-    const anexos = JSON.parse($('#jsonAnexoInterino'+idInterino).html());
-    $('#funcaoInterina').val(obj.funcao);
-    $('#setorInterina').val(obj.setor).change();
-    if(obj.chefia == 1) $('#chefiaInterina').prop('checked', true);
-    else $('#chefiaInterina').prop('checked', false);
-    $('#dataInicioInterina').val(obj.data_inicio);
-    $('#dataFimInterina').val(obj.data_fim);
-    $('#observacaoInterina').val(obj.observacao);
-    $('input[name="idInterino"]').val(idInterino);
-    $('input[name="idUser"]').val(idUser);
-    $('input[name="idHistorico"]').val(idHistorico);
-
-    // listaAnexosInterino.setChoices(anexos);
+    selectAnexosInterino.clearStore();
+    const anexos = JSON.parse($('#jsonAnexoInt'+idI).html());
+    selectAnexosInterino.setChoices(anexos);
+    if(idI == '0') {
+        return resetInputsInterino();
+    }
+    
+    const obj = JSON.parse($('#dados_interino'+idI).html());
+    
+    $('[name="funcao_interina"]').val(obj.funcao);
+    $('[name="setor_interino"]').val(obj.setor).change();
+    $('[name="observacao_interino"]').val(obj.observacao);
+    $('[name="chefia_interino"]').val(obj.chefia).change();
+    $('[name="data_contratacao_interino"]').val(obj.data_contratacao);
+    $('[name="data_rescisao_interino"]').val(obj.data_rescisao);
+    $('[name="id_interino"]').val(idI);
 }
 
 function editItemAnexo(idItem, item) {
@@ -480,6 +486,10 @@ function prepareCopy(item) {
     $('#matriculaCopy').html($('#'+item+'matricula').html());
 }
 
+function prepareDeleteInterino(id) {
+    $('[name="id_interino"]').val(id);
+}
+
 function toast(tipo, msg='Erro ao salvar!') {
     return $.toast({
         heading: tipo == 'success'?'Sucesso':'Erro',
@@ -497,4 +507,13 @@ function resetInputs() {
     $('input[type="hidden"]').val('');
     $('input[type="file"]').val('');
     $('input[name="tipo"]').val(tipoAnexo);
+}
+
+function resetInputsInterino() {
+    $('[name="funcao_interina"]').val('');
+    $('[name="setor_interino"]').val('0').change();
+    $('[name="observacao_interino"]').val('');
+    $('[name="chefia_interino"]').val('1').change();
+    $('[name="data_contratacao_interino"]').val('');
+    $('[name="data_rescisao_interino"]').val('');
 }

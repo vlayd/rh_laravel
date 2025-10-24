@@ -35,6 +35,9 @@ Route::middleware([CheckIsLogged::class])->group(function(){
     Route::prefix('historico')->group(function(){
         Route::get('detail/{id}', [HistoricoController::class, 'detail'])->name('historico.detail');
         Route::post('save', [HistoricoController::class, 'save'])->name('historico.save');
+        Route::post('delete', [HistoricoController::class, 'delete'])->name('historico.delete');
+        Route::post('saveinterino', [HistoricoController::class, 'saveInterino'])->name('historico.saveinterino');
+        Route::post('deleteinterino', [HistoricoController::class, 'deleteInterino'])->name('historico.deleteinterino');
     });
     Route::prefix('anexo')->group(function(){
         Route::get('/{id}', [AnexoController::class, 'index'])->name('anexo');

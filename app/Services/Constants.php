@@ -82,6 +82,11 @@ define('CDN_JS_SWEETALERT2', '
 <script src="'.CDN_JS_INIT.'sweetalert2.js"></script>
 ');
 
+define('CDN_JS_QUILL', '
+<script src="'.CDN_JS_PLUGINS.'quill.min.js"></script>
+<script src="'.CDN_JS_INIT.'quill.js"></script>
+');
+
 define('CDN_JS_PERFECT_SCROLLBAR', '
 <script src="'.CDN_JS_PLUGINS.'perfect-scrollbar.min.js"></script>
 <script src="'.CDN_JS_PLUGINS.'smooth-scrollbar.min.js"></script>
@@ -307,10 +312,10 @@ define(
         'historicos.setor',
         'historicos.anexos',
         'historicos.data_rescisao',
-        'historicos.tipo',
+        'historicos.alteracao',
         'historicos.cargo',
         'historicos.anexos',
-        'historicos.status',
+        'historicos.atual',
         'contratos.nome AS nomeContrato',
         'gratificacoes.nome AS nomeGratificacao',
         'cargos.nome AS nomeCargo',
@@ -327,8 +332,8 @@ define(
         'funcao_interina.anexos',
         'funcao_interina.funcao',
         'funcao_interina.chefia',
-        'funcao_interina.data_inicio',
-        'funcao_interina.data_fim',
+        'funcao_interina.data_contratacao',
+        'funcao_interina.data_rescisao',
         'funcao_interina.observacao',
         'funcao_interina.setor',
         'setores.nome AS nomeSetor'

@@ -2,14 +2,21 @@
     $page = ['servidor'];
     $js = 'servidor';
 @endphp
+
 @extends('layouts.main_layout')
 
 @section('breadcrumb')
 @endsection
 
 @section('content')
-    <div class="d-none" id="jsonAnexo0"><?=$anexosAtual?></div>
-    <div class="d-none" id="dados0"><?=json_encode($atual) ?></div>
+    @if (isset($atual))
+        <div class="d-none" id="jsonAnexo0"><?=$anexosAtual?></div>
+        <div class="d-none" id="jsonAnexoInt0"><?=$anexosInicialInterino?></div>
+        <div class="d-none" id="dados0"><?=json_encode($atual) ?></div>
+        <div class="d-none" id="dados0"><?=json_encode($atual) ?></div>
+    @else
+        <div class="d-none" id="jsonAnexo0"><?=$anexos?></div>
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -27,9 +34,12 @@
 
                 <!-- Card body -->
                 <div class="card-body px-3 pb-0">
-                    <div class="timeline timeline-one-side" data-timeline-axis-style="dotted">                        
-                        @foreach ($historicos as $historico)
+                    <div class="timeline timeline-one-side" data-timeline-axis-style="dotted">
+                        @if (!empty($historicos))
+                             @foreach ($historicos as $historico)
                             @php
+                                $dataContratacao = date_format(date_create($historico->data_contratacao), "d/m/Y");
+                                $dataRescisao = date_format(date_create($historico->data_rescisao), "d/m/Y");
                                 $jsonRetorno = [];
                                 $iconHistorico = 'fa-check';
                                 $colorHistorico = 'primary';
@@ -61,7 +71,7 @@
                                             <div class="accordion-header" id="heading<?= $historico->idhistorico ?>">
                                                 <a class="font-weight-bold collapsed" type="button" data-bs-toggle="collapse" href="#collapse<?= $historico->idhistorico ?>" aria-expanded="false" aria-controls="collapse<?= $historico->idhistorico ?>">
                                                     <h6 class="text-secondary font-weight-bold text-sm mb-0">
-                                                        <?= $historico->data_contratacao . ' - ' . $historico->data_rescisao ?>
+                                                        <?= $dataContratacao . ' - ' . $dataRescisao??'Hoje' ?>
                                                     </h6>
                                                 </a>
                                             </div>
@@ -77,11 +87,10 @@
                                                             <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalHistorico" onclick="editHistorico(<?= $historico->idhistorico ?>)">
                                                                 <i class="fas fa-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Histórico"></i>
                                                             </a>
-                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalExcluirHistorico">
+                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalDeletaHistorico" class="prepare_delete_historico" data-id="{{$historico->idhistorico}}">
                                                                 <i class="fas fa-trash-alt text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir Histórico"></i>
                                                             </a>
-                                                            <a href="javascript:;" data-bs-toggle="modal"
-                                                                data-bs-target="#modalInterino" onclick="editInterino(0, <?= $historico->userHistorico ?>, <?= $historico->idhistorico ?>)">
+                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalInterino" class="prepare_save_interino"  data-id="0" data-hist="{{$historico->idhistorico}}">
                                                                 <i class="fas fa-plus text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar Função Interina"></i>
                                                             </a>
                                                         </div>
@@ -111,27 +120,46 @@
                                                     
                                                     @if ($interinos && str_contains(json_encode($interinos), '"id_historico":'.$historico->idhistorico))
                                                     @foreach ($interinos as $interino)
+                                                    @php
+                                                    $jsonRetornoInt = [];
+                                                    @endphp
                                                     @if ($historico->idhistorico != $interino->id_historico) @php continue; @endphp @endif
+                                                    @php                                                        
+                                                        $dataContratacao = date_format(date_create($interino->data_contratacao), "d/m/Y");
+                                                        $dataRescisao = date_format(date_create($interino->data_rescisao), "d/m/Y");
+                                                    @endphp
                                                     <div class="row mt-3 ms-3">
+                                                        <div class="d-none" id="dados_interino<?= $interino->id ?>"><?=json_encode($interino) ?></div>
                                                         <div class="col-md-8 d-flex align-items-center">
                                                             <h6 class="mb-2">Função Interina</h6>
                                                         </div>
                                                         <div class="col text-end">
-                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalInterino">
-                                                                <i class="fas fa-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Histórico"></i>
+                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalInterino" class="prepare_save_interino" data-id="{{$interino->id}}" data-hist="{{$historico->idhistorico}}">
+                                                                <i class="fas fa-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Função Interina"></i>
                                                             </a>
-                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalExcluirHistorico">
-                                                                <i class="fas fa-trash-alt text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir Histórico"></i>
+                                                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalDeletaInterino" class="prepare_delete_interino" data-id="{{$interino->id}}">
+                                                                <i class="fas fa-trash-alt text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir Função Interina"></i>
                                                             </a>
                                                         </div>
                                                         <div class="p-3 text-sm border-radius-lg" style="background-color: #f6d4d4;">
+                                                            <div class="text-dark py-1"><strong class="text-dark">Período:</strong> &nbsp; {{$dataContratacao . ' - ' . $dataRescisao}}</div>
                                                             <div class="text-dark py-1"><strong class="text-dark">Função:</strong> &nbsp; {{$interino->funcao}}</div>
                                                             <div class="text-dark py-1"><strong class="text-dark">Setor:</strong> &nbsp; {{$interino->nomeSetor}}</div>
                                                             <div class="text-dark py-1"><strong class="text-dark">Chefia:</strong> &nbsp; <?=$interino->chefia == '2' ?'Sim':'Não'?></div>
-                                                            <div class="text-dark py-1"><strong class="text-dark">Período:</strong> &nbsp; 10/01/2025 à 01/01/2026</div>
-                                                            <div class="text-dark py-1"><strong class="text-dark">Observação:</strong> &nbsp; Observaçoes</div>
+                                                            <div class="text-dark py-1"><strong class="text-dark">Observação:</strong> &nbsp; <?=$interino->observacao?></div>
                                                             <div class="text-dark pt-1"><strong class="text-dark">Anexos:</strong></div>
-                                                            <div class="text-danger ms-3 mt-1"><i class="fas fa-file-upload fa-lg"></i> <strong><a class="text-primary" href="" target="_blank">Anexo</a></strong></div>
+                                                            @foreach ($anexos as $anexo)
+                                                                @php
+                                                                    if(!in_array($anexo->id, json_decode($interino->anexos))){
+                                                                        $jsonRetornoInt[] = ['value' => $anexo->id, 'label'=> $anexo->nome];
+                                                                        continue;
+                                                                    } else {
+                                                                        $jsonRetornoInt[] = ['value' => $anexo->id, 'label'=> $anexo->nome, 'selected' => true];
+                                                                    }
+                                                                @endphp
+                                                                <div class="text-danger ms-3 mt-1"><i class="fas fa-file-upload fa-lg"></i> <strong><a class="text-primary" href="" target="_blank">{{$anexo->nome}}</a></strong></div>
+                                                            @endforeach
+                                                            <div class="d-none" id="jsonAnexoInt<?= $interino->id ?>"><?=json_encode($jsonRetornoInt)?></div>
                                                         </div>
                                                     </div>                                                        
                                                     @endforeach
@@ -144,14 +172,20 @@
                             </div>
                             
                         @endforeach
+                        @endif
+                       
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @include('historico.modals.modal_historico')
+@include('historico.modals.modal_interino')
+@include('historico.modals.modal_deleta_historico')
+@include('historico.modals.modal_deleta_interino')
 @endsection
 
 @section('js')
 <?=JS_PLUGIN_CHOICES?>
+<?=CDN_JS_QUILL?>
 @endsection
