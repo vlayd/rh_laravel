@@ -8,7 +8,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          @include('layouts.inputs.input_checkbox', ['campo' => 'atual', 'classe' => '', 'label' => 'Situação atual', 'valor' => '1'])            
+          @include('layouts.inputs.input_checkbox', ['campo' => 'atual', 'classe' => '', 'label' => 'Situação atual', 'valor' => '1'])
         </div>
         <div class="modal-body" id="modal-body">
           <div class="row justify-content-center">
@@ -34,7 +34,7 @@
             </div>
             <div class="col-6">
               @include('layouts.inputs.input_checkbox', ['campo' => 'alteracao', 'idCheck' => 'chkSetor', 'classe' => 'mb-0', 'colchete' => '[]', 'label' => 'Setor', 'valor' => '7'])
-              @include('layouts.inputs.input_select_bd', ['items' => $setores, 'campo' => 'setor'])
+              @include('layouts.inputs.input_select_setores')
             </div>
             <div class="col-3">
               @include('layouts.inputs.input_checkbox', ['campo' => 'alteracao', 'idCheck' => 'chkChefia', 'classe' => 'mb-0', 'colchete' => '[]', 'label' => 'Chefia', 'valor' => '8'])

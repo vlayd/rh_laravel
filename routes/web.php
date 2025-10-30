@@ -30,7 +30,8 @@ Route::middleware([CheckIsLogged::class])->group(function(){
         Route::post('updatestatus', [ServidorController::class, 'updateStatus'])->name('servidor.updatestatus');
         Route::post('update', [ServidorController::class, 'update'])->name('servidor.update');
         Route::post('addcol', [ServidorController::class, 'formSaveCol'])->name('servidor.addcol');
-        Route::get('timeline/{id}', [ServidorController::class, 'timeline'])->name('servidor.timeline');;
+        Route::get('timeline/{id}', [ServidorController::class, 'timeline'])->name('servidor.timeline');
+        Route::get('pdf/{id}/{pdf}', [ServidorController::class, 'detail'])->name('servidor.pdf');
     });
     Route::prefix('historico')->group(function(){
         Route::get('detail/{id}', [HistoricoController::class, 'detail'])->name('historico.detail');

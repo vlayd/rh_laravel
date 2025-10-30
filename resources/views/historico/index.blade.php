@@ -13,7 +13,6 @@
         <div class="d-none" id="jsonAnexo0"><?=$anexosAtual?></div>
         <div class="d-none" id="jsonAnexoInt0"><?=$anexosInicialInterino?></div>
         <div class="d-none" id="dados0"><?=json_encode($atual) ?></div>
-        <div class="d-none" id="dados0"><?=json_encode($atual) ?></div>
     @else
         <div class="d-none" id="jsonAnexo0"><?=$anexos?></div>
     @endif
@@ -35,8 +34,8 @@
                 <!-- Card body -->
                 <div class="card-body px-3 pb-0">
                     <div class="timeline timeline-one-side" data-timeline-axis-style="dotted">
-                        @if (!empty($historicos))
-                             @foreach ($historicos as $historico)
+                        @if (isset($historicos))
+                            @foreach ($historicos as $historico)
                             @php
                                 $dataContratacao = date_format(date_create($historico->data_contratacao), "d/m/Y");
                                 $dataRescisao = date_format(date_create($historico->data_rescisao), "d/m/Y");
@@ -54,17 +53,27 @@
                                     <i class="fas <?=$iconHistorico?> text-<?=$colorHistorico?> text-gradient"></i>
                                 </span>
                                 <div class="timeline-content mw-100">
-                                    @php $i = 0; @endphp
+                                    @php
+                                        $i = 0;
+                                        $deleteInicial = true;
+                                    @endphp
                                     @foreach (json_decode($historico->alteracao) as $alteracao)
-                                    {{-- Verifica se tipo não é 1(início) pra não aparecer o badge alteração e $i=0 só repete uma vez --}}
-                                    @if ($i == 0 && $alteracao != 1)
-                                    <span class="badge badge-sm bg-gradient-secondary">ALTERAÇÃO</span>                                        
-                                    @endif
-                                    <span class="badge badge-sm bg-gradient-<?=$colorHistorico?>"><?=ALTERACAO_HISTORICO[$alteracao]?></span>
-                                    @php $i++; @endphp
+                                        {{-- Verifica se tipo não é 1(início) pra não aparecer o badge alteração e $i=0 só repete uma vez --}}
+                                        @if ($i == 0 && $alteracao != 1)
+                                        <span class="badge badge-sm bg-gradient-secondary">ALTERAÇÃO</span>
+                                        @elseif ($i == 0 && $alteracao == 1)
+                                        {{-- Verifica se tipo não é 1(início) logo não pode excluir --}}
+                                        @php
+                                            $deleteInicial = false;                                            
+                                        @endphp
+                                        @endif
+                                        <span class="badge badge-sm bg-gradient-<?=$colorHistorico?>"><?=ALTERACAO_HISTORICO[$alteracao]?></span>
+                                        @php
+                                        $i++;                                        
+                                        @endphp
                                     @endforeach
                                     @if ($interinos && str_contains(json_encode($interinos), '"id_historico":'.$historico->idhistorico))
-                                    <span class="badge badge-sm bg-gradient-warning">Função Interina</span>                                        
+                                    <span class="badge badge-sm bg-gradient-warning">Função Interina</span>
                                     @endif
                                     <div class="accordion" id="accordionRental<?= $historico->idhistorico ?>">
                                         <div class="accordion-item">
@@ -87,9 +96,11 @@
                                                             <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalHistorico" onclick="editHistorico(<?= $historico->idhistorico ?>)">
                                                                 <i class="fas fa-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Histórico"></i>
                                                             </a>
+                                                            @if ($deleteInicial)
                                                             <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalDeletaHistorico" class="prepare_delete_historico" data-id="{{$historico->idhistorico}}">
                                                                 <i class="fas fa-trash-alt text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir Histórico"></i>
-                                                            </a>
+                                                            </a>                                                                
+                                                            @endif
                                                             <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalInterino" class="prepare_save_interino"  data-id="0" data-hist="{{$historico->idhistorico}}">
                                                                 <i class="fas fa-plus text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Adicionar Função Interina"></i>
                                                             </a>

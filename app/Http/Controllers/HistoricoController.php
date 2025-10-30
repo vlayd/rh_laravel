@@ -11,10 +11,10 @@ class HistoricoController extends Controller
     {
         // die('A quill não está pegando o valor da observação');
         $id = $this->decriptId($id);
-        $setores = DB::table('setores')->get();
+        $setores = DB::table('setores')->orderBy('nome')->get();
         $servidor = DB::table('usuarios')->find($id);
-        $contratos = DB::table('contratos')->get();
-        $cargos = DB::table('cargos')->get();
+        $contratos = DB::table('contratos')->orderBy('nome')->get();
+        $cargos = DB::table('cargos')->orderBy('nome')->get();
         $gratificacoes = DB::table('gratificacoes')->get();
         $anexos = DB::table('anexos')->where(['tipo' => 10, 'id_usuario' => $id])->get(['id', 'nome']);
         $anexosInicialInterino = $this->jsonAnexo($anexos);
@@ -30,7 +30,6 @@ class HistoricoController extends Controller
         ];
         if($this->getTabela($id, 'count') > 0){
             $historicos = $this->getTabela($id);
-            die('chegou');
             $atual = DB::table('historicos')->where(['atual'=> 1, 'id_usuario' => $id])->first();
             $interinos = DB::table('funcao_interina')->select(SELECT_FUNCAO_INTERINA)
                     ->join(JOIN_FUNCAOINTERINA_SETOR[0], JOIN_FUNCAOINTERINA_SETOR[1], '=', JOIN_FUNCAOINTERINA_SETOR[2], 'left')
@@ -43,10 +42,7 @@ class HistoricoController extends Controller
         } else {
             //Se não tiver histórico registrado, 
             $dados['anexosAtual'] = $this->jsonAnexo($anexos);
-
         }
-        
-        
         
         return view('historico.index', $dados);
     }
@@ -54,7 +50,7 @@ class HistoricoController extends Controller
     public function save(Request $request)
     {
         $dados = [
-            'alteracao' => json_encode($request['alteracao']??'["1"]'),
+            'alteracao' => json_encode($request['alteracao']??["1"]),
             'id_usuario' => $request['id_usuario'],
             'contrato' => $request['contrato'],
             'cargo' => $request['cargo'],
@@ -67,10 +63,8 @@ class HistoricoController extends Controller
             'data_rescisao' => $request['data_rescisao'],
             'anexos' => json_encode($request['anexos']),
         ];
-        if(isset($request['atual'])) {
-            $dados['atual'] = $request['atual'];
-            DB::table('historicos')->where(['id_usuario' => $request['id_usuario'], 'atual' => 1])->update(['atual' => 0]);
-        }
+        if(isset($request['atual'])) $dados['atual'] = 1;
+        else  $dados['atual'] = 0;
 
         if(empty($request['id_historico'])){
             DB::table('historicos')->insert($dados);
@@ -93,7 +87,7 @@ class HistoricoController extends Controller
             if (isset($request['id_historico'])){
                 DB::table('funcao_interina')->where('id_historico', $request['id_historico'])->delete();
             } else {
-                DB::table('funcao_interina')->where('id_interino', $request['id_interino'])->delete();
+                DB::table('funcao_interina')->where('id', $request['id_interino'])->delete();
             } 
         } catch (\Throwable $th) {
             dd($th->getMessage());

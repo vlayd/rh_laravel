@@ -305,30 +305,32 @@ function editItem(idItem, item) {
 
 function editHistorico(id) {
     //Evita duplicidade
-    selectAnexos.clearStore();
-    console.log($('#jsonAnexo'+id).html());
     
-    const obj = JSON.parse($('#dados'+id).html());
-    const anexos = JSON.parse($('#jsonAnexo'+id).html());
+    if($('#dados'+id).html() != null){
+        selectAnexos.clearStore();
+        const anexos = JSON.parse($('#jsonAnexo'+id).html());
+        const obj = JSON.parse($('#dados'+id).html());
+        
+        $('#contrato').val(obj.contrato).change();
+        $('#cargo').val(obj.cargo).change();
+        $('#matricula').val(obj.matricula);
+        $('#funcao').val(obj.funcao);
+        $('#gratificacao').val(obj.gratificacao).change();
+        $('#setor').val(obj.setor).change();
+        $('#chefia').val(obj.chefia).change();
+        $('#data_contratacao').val(obj.data_contratacao);
+        $('#data_rescisao').val(obj.data_rescisao);
+        $('input[name="id_historico"]').val(id);
+        
+        $.each(['1','2','3','4','5','6','7','8'], function(index, value) {
+            if($.inArray(value, JSON.parse(obj.alteracao)) >= 0) $('input[type="checkbox"][value='+value+']').attr("checked", true);
+            else $('input[type="checkbox"][value='+value+']').attr("checked", false);
+        });
+        if(obj.atual == 1) $('[name="atual"]').attr("checked", true);
+        else $('[name="atual"]').attr("checked", false);
+        selectAnexos.setChoices(anexos);
+    }
     
-    $('#contrato').val(obj.contrato).change();
-    $('#cargo').val(obj.cargo).change();
-    $('#matricula').val(obj.matricula);
-    $('#funcao').val(obj.funcao);
-    $('#gratificacao').val(obj.gratificacao).change();
-    $('#setor').val(obj.setor).change();
-    $('#chefia').val(obj.chefia).change();
-    $('#data_contratacao').val(obj.data_contratacao);
-    $('#data_rescisao').val(obj.data_rescisao);
-    $('input[name="id_historico"]').val(id);
-    
-    $.each(['1','2','3','4','5','6','7','8'], function(index, value) {
-        if($.inArray(value, JSON.parse(obj.alteracao)) >= 0) $('input[type="checkbox"][value='+value+']').attr("checked", true);
-        else $('input[type="checkbox"][value='+value+']').attr("checked", false);
-    });
-    if(obj.status == 1) $('#situacaoAtual').attr("checked", true);
-    else $('#situacaoAtual').attr("checked", false);
-    selectAnexos.setChoices(anexos);
 
 }
 
@@ -488,6 +490,10 @@ function prepareCopy(item) {
 
 function prepareDeleteInterino(id) {
     $('[name="id_interino"]').val(id);
+}
+
+function prepareDeleteHistorico(id) {
+    $('[name="id_historico"]').val(id);
 }
 
 function toast(tipo, msg='Erro ao salvar!') {

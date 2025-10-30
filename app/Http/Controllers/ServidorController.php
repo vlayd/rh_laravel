@@ -31,20 +31,28 @@ class ServidorController extends Controller
         return view('servidor.tabela', $dados);
     }
 
-    public function detail($id)
+    public function detail($id, $pdf = 0)
     {
         $id = Operations::decriptId($id);
         if($id == null) return redirect()->route('/');
-
         //LEFT deve ter, pois evita o nulo (servidor)
-        $servidor = DB::table('usuarios')
+        $atual = DB::table('historicos')
         ->select(SELECT_SERVIDOR_DETAIL)
-        ->join('contratos', 'usuarios.contrato', '=', 'contratos.id', 'LEFT')
-        ->join('cargos', 'usuarios.cargo', '=', 'cargos.id', 'LEFT')
-        ->join('gratificacoes', 'usuarios.gratificacao', '=', 'gratificacoes.id', 'LEFT')
-        ->join('setores', 'usuarios.setor', '=', 'setores.id', 'LEFT')
-        ->where('usuarios.id', $id)
+        ->join('usuarios', 'historicos.id_usuario', '=', 'usuarios.id', 'LEFT')
+        ->join('contratos', 'historicos.contrato', '=', 'contratos.id', 'LEFT')
+        ->join('escolaridades', 'usuarios.escolaridade', '=', 'escolaridades.id', 'LEFT')
+        ->join('cargos', 'historicos.cargo', '=', 'cargos.id', 'LEFT')
+        ->join('gratificacoes', 'historicos.gratificacao', '=', 'gratificacoes.id', 'LEFT')
+        ->join('setores', 'historicos.setor', '=', 'setores.id', 'LEFT')
+        ->where(['historicos.id_usuario' => $id, 'historicos.atual' => '1'])
         ->first();
+
+        //Funcão Interina
+        $interinas = DB::table('funcao_interina')
+        ->select(SELECT_FUNCAO_INTERINA)
+        ->join('setores', 'funcao_interina.setor', '=', 'setores.id', 'LEFT')
+        ->where(['funcao_interina.id_usuario' => $id])
+        ->get();;
 
         //Históricos
         $historicos = DB::table('historicos')
@@ -54,27 +62,28 @@ class ServidorController extends Controller
         ->join('gratificacoes', 'historicos.gratificacao', '=', 'gratificacoes.id', 'LEFT')
         ->join('setores', 'historicos.setor', '=', 'setores.id', 'LEFT')
         // ->join('anexos', 'historicos.anexos', '=', 'anexos.id', 'LEFT')
-        ->where('historicos.id_usuario', $id)
+        ->where(['historicos.id_usuario' => $id, 'historicos.atual' => '0'])
         ->get();
 
-        $servidor->idade = Operations::diffYearsNow($servidor->nascimento);
-        $servidor->nascimento = Operations::formataData($servidor->nascimento);
-        $servidor->cpf = Operations::formataCPF($servidor->cpf);
-        $servidor->rg = "$servidor->rg_numero $servidor->rg_orgao_emissor/$servidor->rg_uf";
+        $atual->idade = Operations::diffYearsNow($atual->nascimento);
+        $atual->nascimento = Operations::formataData($atual->nascimento);
+        $atual->cpf = Operations::formataCPF($atual->cpf);
+        $atual->rg = "$atual->rg_numero $atual->rg_orgao_emissor/$atual->rg_uf";
         
-        $servidor->endereco = "{$servidor->endereco_rua}, nº {$servidor->endereco_numero}, {$servidor->endereco_bairro}, {$servidor->endereco_complemento}, {$servidor->endereco_cidade}-Acre";
-        $servidor->escolaridade = ESCOLARIDADE[$servidor->escolaridade];
+        $atual->endereco = "{$atual->endereco_rua}, nº {$atual->endereco_numero}, {$atual->endereco_bairro}, {$atual->endereco_complemento}, {$atual->endereco_cidade}-Acre";
+        $atual->escolaridade = ESCOLARIDADE[$atual->escolaridade];
         $anexos = null;
-        if($servidor->anexos != null){
-            foreach(json_decode($servidor->anexos) as $anexo){
+        if($atual->anexos != null){
+            foreach(json_decode($atual->anexos) as $anexo){
                 $anexos[] = $this->getAnexo($anexo);
             }
         }
-        $servidor->anexos = $anexos;
+        $atual->anexos = $anexos;
         $dados = [
             'idUser' => $id,
-            'servidor' => $servidor,
+            'atual' => $atual,
             'historicos' => $historicos,
+            'interinas' => $interinas,
             'anexos' => [
                 'faculdade' => $this->anexoPorUser($id, 5, 'lista'),
                 'pos' => $this->anexoPorUser($id, 6, 'lista'),
@@ -82,7 +91,7 @@ class ServidorController extends Controller
                 'doutorado' => $this->anexoPorUser($id, 8, 'lista'),
             ],
         ];
-
+        if($pdf == 1) return view('servidor.pdf.detail_pdf', $dados);
         return view('servidor.detail', $dados);
     }
 
@@ -181,4 +190,5 @@ class ServidorController extends Controller
             die($th->getMessage());
         }
     }
+    
 }

@@ -12,7 +12,7 @@
         <div class="modal-body" id="modal-body">
           <div class="row justify-content-center">
             @include('layouts.inputs.input_text', ['label' => 'Função', 'campo' => 'funcao_interina', 'classe' => 'col-6'])
-            @include('layouts.inputs.input_select_bd', ['items' => $setores, 'campo' => 'setor_interino', 'label' => 'Setor', 'classe' => 'col-6'])              
+            @include('layouts.inputs.input_select_setores', ['campo' => 'setor_interino', 'label' => 'Setor', 'classe' => 'col-6'])
             @include('layouts.inputs.input_textarea', ['label' => 'Descrição', 'campo' => 'observacao_interino', 'rows' => '4'])
             @include('layouts.inputs.input_select', ['items' => $chefias, 'campo' => 'chefia_interino', 'firstDefault' => false, 'label' => 'Chefia', 'classe' => 'col-6'])
             @include('layouts.inputs.input_select_choices_tag_bd', ['classe' => 'col-6', 'numIdChoice' => 'i', 'items' => $anexos, 'campo' => 'anexos_interino'])

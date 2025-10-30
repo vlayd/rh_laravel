@@ -283,15 +283,18 @@ define(
         'usuarios.endereco_complemento',
         'usuarios.endereco_bairro',
         'usuarios.endereco_cidade',
-        'usuarios.nascimento',
         'usuarios.nome_o_classe',
         'usuarios.numero_o_classe',
         'usuarios.escolaridade',
         'usuarios.secretaria_origem',
-        'usuarios.funcao',
-        'usuarios.chefia',
-        'usuarios.anexos',
-        'usuarios.matricula',
+        'escolaridades.id AS idEscolar',
+        'escolaridades.nome AS nomeEscolar',
+        'historicos.matricula',
+        'historicos.funcao',
+        'historicos.chefia',
+        'historicos.data_contratacao',
+        'historicos.data_rescisao',
+        'historicos.anexos',
         'contratos.nome AS nomeContrato',
         'gratificacoes.nome AS nomeGratificacao',
         'cargos.nome AS nomeCargo',
@@ -339,6 +342,33 @@ define(
         'setores.nome AS nomeSetor'
         ]
     );
+
+define('SELECT_SERVIDOR_PDF',
+    [
+        'usuarios.id AS idUser',
+        'usuarios.nome',
+        'usuarios.nascimento',
+        'usuarios.cpf',
+        'usuarios.rg_numero',
+        'usuarios.rg_orgao_emissor',
+        'usuarios.rg_uf',
+        'usuarios.telefone',
+        'usuarios.telefone2',
+        'usuarios.email',
+        'usuarios.email2',
+        'usuarios.endereco_rua',
+        'usuarios.endereco_numero',
+        'usuarios.endereco_complemento',
+        'usuarios.endereco_bairro',
+        'usuarios.endereco_cidade',
+        'usuarios.escolaridade',
+        'escolaridades.id AS idEscolar',
+        'escolaridades.nome AS nomeEscolar',
+        'historicos.contrato AS contratoHistorico',
+        'contratos.nome AS nomeContrato',
+        'gratificacoes.nome AS nomeGratificacao',    
+    ]
+);
     
     // ________________JOIN____________________
     define('JOIN_USUARIO_SETOR', ['setores', 'usuarios.setor', 'setores.id']);

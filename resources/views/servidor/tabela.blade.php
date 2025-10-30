@@ -74,7 +74,7 @@
                                 </a>
                             <?php endif ?>
                         </span>
-                        <a href="" target="_blank" class="btn btn-danger p-2 mb-0">
+                        <a href="{{route('servidor.pdf', Crypt::encrypt($item['idUser']), '1')}}" target="_blank" class="btn btn-danger p-2 mb-0">
                             <i class="fas fa-file-pdf text-white fa-fw"></i>
                         </a>
                         <a class="btn btn-dark p-2 mb-0" href="{{route('historico.detail', Crypt::encrypt($item['idUser']))}}">
