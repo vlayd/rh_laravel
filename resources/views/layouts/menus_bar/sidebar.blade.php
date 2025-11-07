@@ -18,13 +18,13 @@ $menusBar = [
     ],
     [
         'menu' => 'Aniversariantes',
-        'route' => 'index',
+        'route' => 'servidor.aniversariantes',
         'activeMenu' => $page1 == 'home' ? 'active' : '',
         'icon' => 'fa-solid fa-cake-candles text-primary',
     ],
     [
         'menu' => 'Folha de Ponto',
-        'route' => 'index',
+        'route' => 'ponto',
         'activeMenu' => $page1 == 'home' ? 'active' : '',
         'icon' => 'fa-solid fa-print text-primary',
     ],

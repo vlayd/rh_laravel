@@ -3,7 +3,7 @@ var url = window.location.href;
 
 // ========INICIALIZAÇÃO=============
 $(document).ready(function() {
-    if(document.getElementById('tabela_ponto')) listar();
+    if(document.getElementById('tabela')) listar();
 });
 
 function listar() {
@@ -12,43 +12,24 @@ function listar() {
         method: 'GET',
         dataType: 'html',
         success: function (result) {
-            $('#tabela_ponto').html(result);
+            $('#tabela').html(result);
         },
         error: function (result) {
             console.log('Erros ' + result);            
         }
     });
-}
+};
 
-function preparaEdit(id, mes, idUser, oldAnexo) {
-    $('input[name="idModal"]').val(id);
-    $('input[name="mesModal"]').val(mes);
-    $('input[name="userModal"]').val(idUser);
-    $('input[name="oldAnexoModal"]').val(oldAnexo);
-}
-
-function showFolha(mes) {
-    $.each(['0','01','02','03','04','05','06','07','08','09','10','11','12'], function(index, value){
-        if(mes == value){
-            $('.btnMes'+value).removeClass('bg-secondary');
-            $('.badgeAniversario'+value).removeClass('badge-danger');
-            $('.btnMes'+value).addClass('bg-success');
-            $('.badgeAniversario'+value).addClass('bg-danger');
-        } else {
-            $('.btnMes'+value).removeClass('bg-success');
-            $('.badgeAniversario'+value).removeClass('bg-danger');
-            $('.btnMes'+value).addClass('bg-secondary');
-            $('.badgeAniversario'+value).addClass('badge-danger');
-        }
-        $('.badgeAniversario'+value).addClass('');
-    });
-    if(mes == '0'){
-        $('.mes').removeClass('d-none');
-    } else {
-        $('.mes').addClass('d-none');
-        $('.mes'+mes).removeClass('d-none');
+$.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
-    
+});
+
+$('body').on("click", '.prepare-upload', function () { preparaUpload($(this).data('id')); });
+
+function preparaUpload(id) {
+    $('[name="id_ponto"]').val(id);
 }
 
 function updateStatus(idPonto, idStatus, mes) {
@@ -114,26 +95,26 @@ function gerarFolha(){
     });
 }
 
-$('#form-save').on('submit', function (e) {
-    e.preventDefault();
-    urlSave = url+'/save';
-    $.ajax({
-        url: urlSave,
-        method: 'POST',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function (result) {
-            console.log(result);
-            resetInputs();
-            toast(result);
-            if(result == 'success'){
-                listar();
+function salvar(event, formdata){
+   event.preventDefault();
+        $.ajax({
+            url: url+'/save',
+            method: 'POST',
+            data: new FormData(formdata),
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (result) {
+                console.log(result);
+                resetInputs();
+                toast(result);
+                if(result == 'success'){
+                    listar();
+                }
+            },
+            error: function (result) {
+                console.log('Erros ' + result);            
             }
-        },
-        error: function (result) {
-            console.log('Erros ' + result);            
-        }
-    });
-});
+        });
+}
+

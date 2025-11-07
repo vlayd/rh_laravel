@@ -1,7 +1,7 @@
 <div class="modal fade" id="opcoesModal" tabindex="-1" role="dialog" aria-labelledby="opcoesModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form action="<?=route('servidor.addcol')?>" method="post">
+      <form action="<?=route('coluna.save')?>" method="post">
       @csrf
         <div class="modal-header">
           <h5 class="modal-title" id="opcoesModalLabel">Colunas visíveis</h5>
@@ -16,7 +16,7 @@
             $checked = '';
             //Se o id do bd colunas está dentro do array colunas do bd colunas_visiveis
             if(in_array($coluna['id'], $colunasSelect)) $checked = 'checked'; ?>
-                <div class="form-group d-flex align-items-center justify-content-between <?=$corTaja?>  p-2 m-0">
+                <div class="form-group d-flex align-items-center justify-content-between <?=$corTaja?> p-2 m-0">
                     <span class="text-sm"><?=$coluna['nome']?></span>
                     <div class="form-check form-switch ms-3">
                         <input class="form-check-input" type="checkbox" name="check<?=$coluna['id']?>" value="<?=$coluna['id']?>" <?=$checked?> >

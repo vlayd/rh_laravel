@@ -22,8 +22,8 @@ $mpdf->SetHTMLFooter('
 $escolarFaculdade = '';
 $cpf = Operations::formataCPF($atual->cpf);
 $rg = "{$atual->rg_numero} {$atual->rg_orgao_emissor}/{$atual->rg_uf}";
-$nascimento = Operations::formataData($atual->nascimento);
-$idade = Operations::diffYearsNow($atual->nascimento);
+$nascimento = $atual->nascimento;
+$idade = $atual->idade;
 $telefone = $atual->telefone;
 $telefone2 = $atual->telefone2;
 $email = $atual->email;

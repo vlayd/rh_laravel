@@ -330,31 +330,6 @@ function editHistorico(id) {
         else $('[name="atual"]').attr("checked", false);
         selectAnexos.setChoices(anexos);
     }
-    
-
-}
-
-function showAniversario(mes) {
-    $.each(['0','01','02','03','04','05','06','07','08','09','10','11','12'], function(index, value){
-        if(mes == value){
-            $('.btnMes'+value).removeClass('bg-secondary');
-            $('.badgeAniversario'+value).removeClass('badge-danger');
-            $('.btnMes'+value).addClass('bg-success');
-            $('.badgeAniversario'+value).addClass('bg-danger');
-        } else {
-            $('.btnMes'+value).removeClass('bg-success');
-            $('.badgeAniversario'+value).removeClass('bg-danger');
-            $('.btnMes'+value).addClass('bg-secondary');
-            $('.badgeAniversario'+value).addClass('badge-danger');
-        }
-        $('.badgeAniversario'+value).addClass('');
-    });
-    if(mes == '0'){
-        $('.mes').removeClass('d-none');
-    } else {
-        $('.mes').addClass('d-none');
-        $('.mes'+mes).removeClass('d-none');
-    }
 }
 
 function getAnexos(){

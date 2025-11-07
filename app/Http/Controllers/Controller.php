@@ -76,4 +76,77 @@ abstract class Controller
         ->join('setores', JOIN_FUNCAOINTERINA_SETOR)
         ->where(['id_historico' => $idHistorico])->get();
     }
+
+    protected function listaArray(string $tabela)
+    {
+        try {
+            $itens = DB::table($tabela)->get();
+            return json_decode(json_encode($itens), true);
+        } catch (\Throwable $th) {
+            die($th->getMessage());
+        }
+    }
+
+    protected function removeCsrfArray(array $array):array
+    {
+        unset($array['_token']);
+        return $array;
+    }
+
+    protected function retornaAniversariantes($mes, $type = '')
+    {
+        $query = DB::table('usuarios')->select(['id', 'nome', 'foto', 'aniversario'])->whereMonth('aniversario', $mes)->whereNot("rh", 0);
+        if($type == 'count') return $query->count();
+        return $query->orderBy('aniversario', 'ASC')->get();
+    }
+
+    public function retornaPontoMes($mes, $ano = '', string $type = '')
+    {
+        if(empty($ano)) $ano = date('Y');
+        $query = DB::table('ponto')->where(["mes" => $mes, "ano" => $ano, 'status' => 0]);
+        if($type == 'count') return $query->count();
+        return $query->orderBy('nome')->get();
+    }
+
+    public function formataData($data, $format = "d/m/Y")
+    {
+        $date=date_create($data);
+        return date_format($date,$format);
+    }
+
+    public function diffDaysNow($date1)
+    {        
+        $date1 = date_create($date1);
+        $textColor = '';
+        $now = date_create("2000-".date("m-d"));
+        $diff = date_diff($date1, $now);
+        $count = '';
+        if($diff->format("%R") == '-'){
+            $textColor = 'text-primary';
+            $count = $diff->format("Faltam %a dias");
+            if($diff->format("%a") == 1) $count = $diff->format("Falta %a dias");
+        } else {
+            $count = $diff->format("Passaram %a dias");
+            if($diff->format("%a") == 1) $count = $diff->format("Passou %a dias");
+            $textColor = 'text-secondary';
+            if($diff->format("%R%a") == '+0'){
+                $count = '<i class="fas fa-birthday-cake"></i> É hoje, parabéns! <i class="fas fa-birthday-cake"></i>';
+                $textColor = 'text-danger';
+            }
+        }
+        return '<p class="text-xs font-weight-bold mb-0 text-center '.$textColor.'">'.$count.'</p>';         
+    }
+
+    public function diffYearsNow($date1)
+    {
+        $date1 = date_create($date1);
+        $now = date_create(date("Y-m-d"));
+        $diff = date_diff($date1, $now);
+        return "{$diff->y} anos";
+    }
+
+    public function convertbjectToArray($object)
+    {
+        return json_decode(json_encode($object), true);
+    }
 }

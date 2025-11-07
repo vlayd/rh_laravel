@@ -57,7 +57,7 @@
                             <?php endif ?>
                     </td>
                     <td class="text-center d-none config">
-                        <a href="{{route('servidor.detail', Crypt::encrypt($item['idUser']))}}" target="_blank" class="btn btn-primary p-2 mb-0">
+                        <a href="{{route('servidor.detail', ['id' => Crypt::encrypt($item['idUser']), 'pdf' => 0])}}" target="_blank" class="btn btn-primary p-2 mb-0">
                             <i class="fas fa-eye text-white fa-fw"></i>
                         </a>
                         <a class="btn btn-warning p-2 mb-0" href="{{route('servidor.edit', Crypt::encrypt($item['idUser']))}}">
@@ -74,7 +74,7 @@
                                 </a>
                             <?php endif ?>
                         </span>
-                        <a href="{{route('servidor.pdf', Crypt::encrypt($item['idUser']), '1')}}" target="_blank" class="btn btn-danger p-2 mb-0">
+                        <a href="{{route('servidor.detail', ['id' => Crypt::encrypt($item['idUser']), 'pdf' => 1])}}" target="_blank" class="btn btn-danger p-2 mb-0">
                             <i class="fas fa-file-pdf text-white fa-fw"></i>
                         </a>
                         <a class="btn btn-dark p-2 mb-0" href="{{route('historico.detail', Crypt::encrypt($item['idUser']))}}">

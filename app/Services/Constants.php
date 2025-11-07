@@ -26,7 +26,7 @@ define('PATH_APOIO_TEST_USER', 'assets/img/apoio/test_user.jpg');
 define('PATH_APOIO_TEST_USER_2', 'assets/img/apoio/test_user2.png');
 define('PATH_SEM_IMAGEM', CDN_IMG_APOIO.'no-image.jpg');
 define('PATH_SEM_FOTO', CDN_IMG_APOIO.'no-foto.png');
-define('PATH_UPLOAD_FILE_ANEXO', 'assets/upload/usuarios/files/anexo/');
+define('PATH_UPLOAD_FILE_ANEXO', 'assets/upload/usuarios/');
 
 //________________________CS_______________________________________
 define('CDN_CSS_CORE_ALL', '
@@ -377,7 +377,7 @@ define('SELECT_SERVIDOR_PDF',
     define('JOIN_USUARIO_GRATIFICACAO', 'usuarios.gratificacao = gratificacoes.id');
     define('JOIN_USUARIO_CARGO', 'usuarios.cargo = cargos.id');
     define('JOIN_USUARIO_CONTRATO', 'usuarios.contrato = contratos.id');
-    define('JOIN_USUARIO_PONTO', 'usuarios.id = folha_ponto.id_user');
+    define('JOIN_USUARIO_PONTO', 'usuarios.id = ponto.id_usuario');
     define('JOIN_USUARIO_FERIAS', 'usuarios.id = ferias.id_servidor');
 
     define('JOIN_HISTORICO_USUARIO', ['usuarios', 'historicos.id_usuario', 'usuarios.id']);

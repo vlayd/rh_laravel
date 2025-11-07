@@ -60,7 +60,9 @@
                                                 <i class="fas fa-download fa-lg text-white fa-fw"></i>
                                             </a> 
                                             @else
-                                             <span class="btn btn-secondary mb-0 disabled"><i class="fas fa-download fa-lg p-2 text-white fa-fw"></i></span>   
+                                            <span class="btn btn-secondary mb-0 p-2 disabled">
+                                                <i class="fas fa-download fa-lg text-white fa-fw"></i>
+                                            </span>   
                                             @endif
                                             <a id="edit" class="btn btn-warning p-2 my-0 btn_prepare_save" data-bs-toggle="modal" data-bs-target="#modalSave" data-id="{{$anexo->id}}">
                                                 <i class="fas fa-edit fa-lg text-white fa-fw"></i>

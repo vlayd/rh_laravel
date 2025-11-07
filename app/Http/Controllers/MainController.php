@@ -68,12 +68,6 @@ class MainController extends Controller
         return view('home/index', $dados);
     }
 
-    private function retornaAniversariantes($mes, $type = ''){
-        $query = DB::table('usuarios')->select(['id', 'nome', 'foto', 'aniversario'])->whereMonth('aniversario', $mes)->whereNot("rh", 0);
-        if($type == 'count') return $query->count();
-        return $query->orderBy('aniversario', 'ASC')->get();
-    }
-
     private function retornaAniversariantes3Meses(){
         $mesAnterior = date('m', strtotime('-1 month'));
         $mesProximo = date('m', strtotime('+1 month'));

@@ -17,8 +17,6 @@ class ServidorController extends Controller
     public function listar()
     {
         $lista = $this->listaArrayUsuariosIndex();
-
-        $colunas = $this->listaArray('colunas');
         $colunasVisiveis = DB::table('colunas_visiveis')->where('id_usuario', session('user.id'))->first();
         if($colunasVisiveis != null) $colunasSelect = json_decode($colunasVisiveis->colunas);
         else $colunasSelect = [];
@@ -31,7 +29,7 @@ class ServidorController extends Controller
         return view('servidor.tabela', $dados);
     }
 
-    public function detail($id, $pdf = 0)
+    public function detail($id, $pdf)
     {
         $id = Operations::decriptId($id);
         if($id == null) return redirect()->route('/');
@@ -63,6 +61,7 @@ class ServidorController extends Controller
         ->join('setores', 'historicos.setor', '=', 'setores.id', 'LEFT')
         // ->join('anexos', 'historicos.anexos', '=', 'anexos.id', 'LEFT')
         ->where(['historicos.id_usuario' => $id, 'historicos.atual' => '0'])
+        ->orderByDesc('data_contratacao')
         ->get();
 
         $atual->idade = Operations::diffYearsNow($atual->nascimento);
@@ -85,10 +84,11 @@ class ServidorController extends Controller
             'historicos' => $historicos,
             'interinas' => $interinas,
             'anexos' => [
-                'faculdade' => $this->anexoPorUser($id, 5, 'lista'),
-                'pos' => $this->anexoPorUser($id, 6, 'lista'),
+                'faculdade' => $this->anexoPorUser($id, 2, 'lista'),
+                'pos' => $this->anexoPorUser($id, 3, 'lista'),
                 'mestrado' => $this->anexoPorUser($id, 7, 'lista'),
                 'doutorado' => $this->anexoPorUser($id, 8, 'lista'),
+                'cursos' => $this->anexoPorUser($id, 9, 'lista'),
             ],
         ];
         if($pdf == 1) return view('servidor.pdf.detail_pdf', $dados);
@@ -108,9 +108,19 @@ class ServidorController extends Controller
             'cpf' => $cpf,
             'senha' => md5($cpf),
         ];
-        $salva = DB::table('usuarios')->insertGetId($dados);
-        if($salva){
-            return redirect()->route('servidor.edit', [Crypt::encrypt($salva)]);
+        $lastId = DB::table('usuarios')->insertGetId($dados);
+        for ($i=date('m'); $i <= 12; $i++) {
+            DB::table('ponto')->insert(
+                [
+                    'id_usuario' => $lastId, 
+                    'mes' => $i, 
+                    'ano' => date('Y'), 
+                ]
+            );
+        }
+
+        if($lastId){
+            return redirect()->route('servidor.edit', [Crypt::encrypt($lastId)]);
         }
     }
 
@@ -167,6 +177,30 @@ class ServidorController extends Controller
         return redirect()->route('servidor');
     }
 
+    public function aniversariantes()
+    {
+        $itens = [];
+        $noInfo = '<p class="text-xs font-weight-bold mb-0 text-center text-danger">SEM INFORMAÇÃO</p>';
+        $aniversariantes = DB::table('usuarios')->select(['id', 'nome', 'nascimento', 'aniversario', 'foto'])->whereNot('rh', 0)->orderBy('aniversario')->get();
+        foreach ($aniversariantes as $aniversariante) {
+            $aniversariante->falta = is_null($aniversariante->aniversario)?$noInfo:$this->diffDaysNow($aniversariante->aniversario);
+            $aniversariante->aniversario = is_null($aniversariante->aniversario)?$noInfo:$this->formataData($aniversariante->aniversario, 'd/m');
+            $aniversariante->idade = is_null($aniversariante->nascimento)?$noInfo:$this->diffYearsNow($aniversariante->nascimento);
+            $aniversariante->nascimento = is_null($aniversariante->nascimento)?$noInfo:$this->formataData($aniversariante->nascimento);
+        }
+        foreach (MES as $key => $value) {
+             $itens[$key] = [
+                'count' => $this->retornaAniversariantes($key, 'count'),
+                'lista' => $this->retornaAniversariantes($key)
+            ];
+        }
+        $dados = [
+            'aniversariantes' => $aniversariantes,
+            'itens' => $itens
+        ];
+        return view('servidor.aniversariantes', $dados);
+    }
+
     private function listaArrayUsuariosIndex()
     {
         try {
@@ -175,16 +209,6 @@ class ServidorController extends Controller
                     ->join('contratos', 'usuarios.contrato', '=', 'contratos.id', 'left')
                     ->join('setores', 'usuarios.setor', '=', 'setores.id', 'left')
                     ->get();
-            return json_decode(json_encode($itens), true);
-        } catch (\Throwable $th) {
-            die($th->getMessage());
-        }
-    }
-
-    public function listaArray(string $tabela)
-    {
-        try {
-            $itens = DB::table($tabela)->get();
             return json_decode(json_encode($itens), true);
         } catch (\Throwable $th) {
             die($th->getMessage());
